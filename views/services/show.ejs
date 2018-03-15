@@ -1,0 +1,84 @@
+<% include ../partials/header %>
+
+<!-- Page Content -->
+<div class="container">
+
+  <div class="row">
+    <div class="col-lg-9">
+
+      <div class="card mt-4">
+        <img class="card-img-top img-fluid" src="<%= service.image %>" alt="">
+        <div class="card-body">
+          <h3 class="card-title"><%= service.name %>
+          </h3>
+          <em><p class="text-muted">Service provided by <strong><%= service.author.username %></strong></p></em>
+          <hr>
+          <h4>£<%= service.price%></h4>
+          <p class="card-text"><%= service.description %></p>
+
+        </div>
+      </div>
+      <!-- /.card -->
+
+      <% if(currentUser && service.author.id.equals(currentUser._id)) { %>
+        <div class="card card-outline-secondary my-4">
+          <div class="card-body">
+            <a href="/services/<%= service._id %>/edit" class="btn btn-success" style="float:right;">Edit Service</a>
+            <form action="/services/<%= service._id %>?_method=DELETE" method="POST">
+              <button class="btn btn-danger">Delete Service</button>
+            <form>
+          </div>
+        </div>
+      <% } %>
+      <!-- /.card -->
+
+
+      <div class="card card-outline-secondary my-4">
+        <div class="card-header">
+          Service Rating
+        </div>
+        <div class="card-body">
+          <span class="text-warning">&#9733; &#9733; &#9733; &#9733; &#9734;</span>
+          4.0 stars
+        </div>
+      </div>
+      <!-- /.card -->
+
+      <div class="card card-outline-secondary my-4">
+        <div class="card-header">
+          Service Reviews
+        </div>
+        <div class="card-body">
+          <% service.reviews.forEach(function(review){ %>
+            <p><%= review.text %></p>
+            <small class="text-muted">Posted by <strong><%= review.author.username %></strong> on 3/1/17</small>
+            <div class="btn-group" role="group">
+            <% if(currentUser && review.author.id.equals(currentUser._id)) { %>
+              <a href="/services/<%= service._id %>/reviews/<%= review._id %>/edit" class="btn btn-primary btn-sm btn-warning">Edit</a>
+              <form id="delete-form" action="/services/<%= service._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
+                <input type="submit" class="btn btn-primary btn-sm btn-danger" value="Delete Review">
+              </form>
+            <% } %>
+          </div>
+          <hr>
+          <% }) %>
+          <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+          <small class="text-muted">Posted by Anonymous on 3/1/17</small>
+          <hr>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+          <small class="text-muted">Posted by Anonymous on 3/1/17</small>
+          <hr> -->
+          <a href="/services/<%= service._id %>/reviews/new" class="btn btn-success">Leave a Review</a>
+        </div>
+      </div>
+      <!-- /.card -->
+
+    </div>
+    <!-- /.col-lg-9 -->
+
+  </div>
+
+</div>
+<!-- /.container -->
+
+<% include ../partials/footer %>

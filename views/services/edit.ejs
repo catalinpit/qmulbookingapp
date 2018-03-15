@@ -1,0 +1,33 @@
+<% include ../partials/header %>
+
+<div class="container">
+  <div class="jumbotron">
+    <h1> Edit <%= service.name %> </h1>
+    <i> Do not leave any fields blank </i>
+  </div>
+</div>
+
+<div class="container" style="margin:auto;">
+      <form  action="/services/<%= service._id %>?_method=PUT" method="POST">
+        <div class="form-group">
+          <label for="servicename">Service Name</label>
+          <input type="text" class="form-control" name="service[name]" id="servicename" value="<%= service.name %>">
+          <p></p>
+          <label for="serviceprice">Service Price</label>
+          <input type="number" class="form-control" name="service[price]" id="serviceprice" value="<%= service.price %>" min="0.01" step="0.01">
+          <p></p>
+          <label for="serviceimage">Service Image</label>
+          <input type="text" class="form-control" name="service[image]" id="serviceimage" value="<%= service.image %>">
+        </div>
+        <div class="form-group">
+          <label for="servicedescription">Service Description</label>
+          <textarea class="form-control" name="service[description]" id="servicedescription" rows="3"><%= service.description %></textarea>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+</div>
+
+  </div>
+</div>
+
+<% include ../partials/footer %>
