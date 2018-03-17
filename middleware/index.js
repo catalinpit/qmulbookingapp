@@ -14,7 +14,7 @@ middlewareObj.checkServiceOwnership = function(req, res, next) {
         res.redirect("back");
       } else {
         // does the user own the service
-        if(foundService.author.id.equals(req.user._id)) {
+        if(foundService.author.id.equals(req.user._id) || req.user.isAdmin) {
           next();
         } else {
           req.flash("error", "You are not allowed to do that.");
@@ -38,7 +38,7 @@ middlewareObj.checkReviewOwnership = function(req, res, next) {
         res.redirect("back");
       } else {
         // does the user own the service
-        if(foundReview.author.id.equals(req.user._id)) {
+        if(foundReview.author.id.equals(req.user._id) || req.user.isAdmin) {
           next();
         } else {
           req.flash("error", "You are not allowed to do that.");
@@ -55,7 +55,29 @@ middlewareObj.checkReviewOwnership = function(req, res, next) {
 // middleware to check if the user is logged in
 middlewareObj.isLoggedIn = function(req, res, next) {
   if(req.isAuthenticated()) {
-    return next();
+    if(req.user.isServiceProvider || req.user.isAdmin) {
+      return next();
+    }
+
+    if(req.user.isCustomer) {
+      req.flash("error", "You have a customer account, which means that you cannot add services.");
+      return res.redirect("/login");
+    }
+  }
+  req.flash("error", "You are not logged in, please log in.");
+  res.redirect("/login");
+}
+
+middlewareObj.isLoggedInReviews = function(req, res, next) {
+  if(req.isAuthenticated()) {
+    if(req.user.isCustomer || req.user.isAdmin) {
+      return next();
+    }
+
+    if(req.user.isServiceProvider) {
+      req.flash("error", "You are not allowed to add a review. Only customer accounts can add reviews.");
+      return res.redirect("/login");
+    }
   }
   req.flash("error", "You need to be logged in first. Please log in.");
   res.redirect("/login");

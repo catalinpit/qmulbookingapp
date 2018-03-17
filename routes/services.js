@@ -58,7 +58,7 @@ router.get("/services/:id", function(req, res) {
       req.flash("error", "Service not found.");
       console.log(err);
       res.redirect("/services");
-    } else{
+    } else {
       res.render("services/show", {service: foundService});
     }
   });

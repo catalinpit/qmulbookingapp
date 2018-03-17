@@ -5,7 +5,7 @@ var express     = require("express"),
     middleware  = require("../middleware/index");
 
 // add a new review
-router.get("/services/:id/reviews/new", middleware.isLoggedIn, function(req, res) {
+router.get("/services/:id/reviews/new", middleware.isLoggedInReviews, function(req, res) {
   Service.findById(req.params.id, function(err, service) {
     if(err) {
       console.log(err);
@@ -16,7 +16,7 @@ router.get("/services/:id/reviews/new", middleware.isLoggedIn, function(req, res
 });
 
 // add a new review
-router.post("/services/:id/reviews", middleware.isLoggedIn, function(req, res) {
+router.post("/services/:id/reviews", middleware.isLoggedInReviews, function(req, res) {
   Service.findById(req.params.id, function(err, service) {
     if(err) {
       console.log(err);

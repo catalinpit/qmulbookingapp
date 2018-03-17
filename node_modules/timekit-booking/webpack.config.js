@@ -1,0 +1,40 @@
+'use strict';
+
+var webpack = require('webpack');
+var packageJson = require('./package.json')
+
+module.exports = {
+    entry: './src/main.js',
+    devtool: 'source-map',
+    output: {
+        path: './dist',
+        filename: 'booking.js',
+        libraryTarget: 'umd',
+        library: 'TimekitBooking'
+    },
+    externals: {
+        'jquery': {
+            root: 'jQuery',
+            commonjs: 'jquery',
+            commonjs2: 'jquery',
+            amd: 'jquery'
+        }
+    },
+    module: {
+        loaders: [
+            { test: /\.html$/, loader: 'mustache?noShortcut' },
+            { test: /\.css$/, loaders: ['style?singleton', 'css?minimize', 'autoprefixer'] },
+            { test: /\.scss$/, loaders: ['style?singleton', 'css?minimize', 'autoprefixer', 'sass'] },
+            { test: /\.svg$/, loader: 'svg-inline' }
+        ]
+    },
+    plugins: [
+        new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en-gb/),
+        new webpack.DefinePlugin({
+          VERSION: JSON.stringify(packageJson.version)
+        }),
+        new webpack.ProvidePlugin({
+          Promise: 'es6-promise-promise'
+        })
+    ]
+};

@@ -14,7 +14,33 @@ router.get("/register", function(req, res) {
 
 // handle sign up logic
 router.post("/register", function(req, res) {
-  var newUser = new User({username: req.body.username});
+  var newUser = new User(
+    {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      username: req.body.username,
+      email: req.body.email,
+      telephone: req.body.telephone
+    });
+
+  if(req.body.adminCode === "adminGr24" && req.body.serviceProviderCode === "spGr24")
+  {
+    req.flash("error", "You can either be an admin or a service provider. Not both, so please enter either only the admin code or only the service provider code!");
+    res.redirect("back");
+  }
+
+  if(req.body.adminCode === "adminGr24") {
+    newUser.isAdmin = true;
+    newUser.isServiceProvider = false;
+    newUser.isCustomer = false;
+  }
+
+  if(req.body.serviceProviderCode === "spGr24") {
+    newUser.isAdmin = false;
+    newUser.isServiceProvider = true;
+    newUser.isCustomer = false;
+  }
+
   User.register(newUser, req.body.password, function(err, user) {
     if(err) {
       req.flash("error", err.message);

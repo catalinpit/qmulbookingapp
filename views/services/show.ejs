@@ -4,6 +4,25 @@
 <div class="container">
 
   <div class="row">
+
+    <div class="col-lg-3">
+
+      <% if(currentUser) { %>
+      <h1 class="my-4"></h1>
+        <div id="bookingjs"></div>
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" defer></script>
+          <script src="https://cdn.timekit.io/booking-js/v1/booking.min.js" defer></script>
+          <script>
+            window.timekitBookingConfig = {
+              app: 'qmul-5424',
+              email: 'catalinpit@gmail.com',
+              apiToken: 'QczXtOBqCP0EqfICpTG864plXpWtyyIU'
+            }
+        </script>
+      <% } %>
+    </div>
+    <!-- /.col-lg-3 -->
+
     <div class="col-lg-9">
 
       <div class="card mt-4">
@@ -15,23 +34,23 @@
           <hr>
           <h4>£<%= service.price%></h4>
           <p class="card-text"><%= service.description %></p>
+          <em><p class="text-muted">Submitted <%= moment(service.createdAt).fromNow(); %></p></em>
 
         </div>
       </div>
       <!-- /.card -->
 
-      <% if(currentUser && service.author.id.equals(currentUser._id)) { %>
+      <% if(currentUser && service.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin) { %>
         <div class="card card-outline-secondary my-4">
           <div class="card-body">
-            <a href="/services/<%= service._id %>/edit" class="btn btn-success" style="float:right;">Edit Service</a>
-            <form action="/services/<%= service._id %>?_method=DELETE" method="POST">
-              <button class="btn btn-danger">Delete Service</button>
-            <form>
+            <a href="/services/<%= service._id %>/edit" class="btn btn-success" >Edit Service</a>
+            <form action="/services/<%= service._id %>?_method=DELETE" method="POST" style="float:right;">
+              <button class="btn btn-danger" style="float:right;">Delete Service</button>
+            </form>
           </div>
         </div>
       <% } %>
       <!-- /.card -->
-
 
       <div class="card card-outline-secondary my-4">
         <div class="card-header">
@@ -51,24 +70,18 @@
         <div class="card-body">
           <% service.reviews.forEach(function(review){ %>
             <p><%= review.text %></p>
-            <small class="text-muted">Posted by <strong><%= review.author.username %></strong> on 3/1/17</small>
-            <div class="btn-group" role="group">
-            <% if(currentUser && review.author.id.equals(currentUser._id)) { %>
+            <small class="text-muted">Posted by <strong><%= review.author.username %></strong> <%= moment(review.createdAt).fromNow(); %></small>
+            <p><div class="btn-group">
+            <% if(currentUser && review.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin) { %>
               <a href="/services/<%= service._id %>/reviews/<%= review._id %>/edit" class="btn btn-primary btn-sm btn-warning">Edit</a>
               <form id="delete-form" action="/services/<%= service._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
                 <input type="submit" class="btn btn-primary btn-sm btn-danger" value="Delete Review">
               </form>
             <% } %>
-          </div>
+          </div></p>
           <hr>
           <% }) %>
-          <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
-          <small class="text-muted">Posted by Anonymous on 3/1/17</small>
-          <hr>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
-          <small class="text-muted">Posted by Anonymous on 3/1/17</small>
-          <hr> -->
-          <a href="/services/<%= service._id %>/reviews/new" class="btn btn-success">Leave a Review</a>
+            <a href="/services/<%= service._id %>/reviews/new" class="btn btn-success">Leave a Review</a>
         </div>
       </div>
       <!-- /.card -->
