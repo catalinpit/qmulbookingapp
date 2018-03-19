@@ -30,7 +30,7 @@
         <div class="card-body">
           <h3 class="card-title"><%= service.name %>
           </h3>
-          <em><p class="text-muted">Service provided by <strong><%= service.author.username %></strong></p></em>
+          <em><p class="text-muted">Service provided by <strong><a href="/users/<%= service.author.id %>"><%= service.author.username %></a></strong></p></em>
           <hr>
           <h4>£<%= service.price%></h4>
           <p class="card-text"><%= service.description %></p>
