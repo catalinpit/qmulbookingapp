@@ -7,15 +7,54 @@
   </div>
 </div>
 
-<div class="container">
-  <%= user.firstName %>
-  <%= user.lastName %>
-  <%= user.username %>
-  <%= user.email %>
-  <%= user.telephone %>
-  <%= user.isAdmin %>
-  <%= user.isServiceProvider %>
-  <%= user.isCustomer %>
+<div class="container h-100">
+  <div class="row h-100 justify-content-center align-items-center">
+    <div class="col-lg-9">
+
+      <div class="card mt-4">
+        <div class="card-body">
+          <h3 class="card-title"><%= user.username %>
+          </h3>
+          <em><p class="text-muted">Role:
+            <% if(user.isAdmin) { %>
+               Admin
+            <% } %>
+
+            <% if(user.isServiceProvider) { %>
+               Service Provider
+            <% } %>
+
+            <% if(user.isCustomer) { %>
+               Customer
+            <% } %>
+          </p></em>
+          <hr>
+          <h4></h4>
+          <p class="card-text">Username: <em><%= user.username %></em></p>
+          <p class="card-text">First Name: <em><%= user.firstName %></em></p>
+          <p class="card-text">Last Name: <em><%= user.lastName %></em></p>
+          <p class="card-text">Email: <em><%= user.email %></em></p>
+          <p class="card-text">Telephone: <em><%= user.telephone %></em></p>
+          <em><p class="text-muted">Joined on <%= user._id.getTimestamp() %></p></em>
+
+        </div>
+      </div>
+      <!-- /.card -->
+
+      <div class="card card-outline-secondary my-4">
+        <div class="card-header">
+          Service Rating
+        </div>
+        <div class="card-body">
+          <span class="text-warning">&#9733; &#9733; &#9733; &#9733; &#9734;</span>
+          4.0 stars
+        </div>
+      </div>
+      <!-- /.card -->
+
+  </div>
+
 </div>
+<!-- /.container -->
 
 <% include ../partials/footer %>
