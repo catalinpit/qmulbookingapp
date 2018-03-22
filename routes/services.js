@@ -12,13 +12,29 @@ paypal.configure({
 
 // display all services available
 router.get("/services", function(req, res) {
-  Service.find({}, function(err, services){
-    if(err) {
-      console.log(err);
-    } else {
-      res.render("services/homepage", {services: services});
-    }
-  });
+  var noMatch = null;
+  if(req.query.search) {
+    var regex = new RegExp(escapeRegex(req.query.search), 'gi');
+    Service.find({name: regex}, function(err, services) {
+      if(err) {
+        console.log(err);
+      } else {
+        if(services.length < 1) {
+          noMatch = "No services match that query, please try again.";
+        }
+        res.render("services/homepage", {services: services, noMatch: noMatch});
+      }
+    });
+  } else {
+    // Retrieve all the services
+    Service.find({}, function(err, services){
+      if(err) {
+        console.log(err);
+      } else {
+        res.render("services/homepage", {services: services, noMatch: noMatch});
+      }
+    });
+  }
 });
 
 // add a new service to the database
@@ -203,5 +219,9 @@ router.get("/services/:id/cancel", function(req, res) {
     }
   })
 });
+
+function escapeRegex(text) {
+  return text.replace(/[-[\]{}()*+?.,\\^$!#\s]/g, "\\$&");
+}
 
 module.exports = router;

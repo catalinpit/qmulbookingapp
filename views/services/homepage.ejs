@@ -3,17 +3,35 @@
     <!-- Page Content -->
     <div class="container" style="display:flex; flex-wrap: wrap;">
 
+      <div class="container">
+        <div class="jumbotron">
+          <h1> QMUL Booking Application </h1>
+          <p class="text-muted"> Welcome, make bookings within minutes! </p>
+        </div>
+      </div>
+
       <div class="row">
 
-        <div class="col-lg-3">
-
+        <!-- <div class="col-lg-3">
           <h1 class="my-4">Categories</h1>
           <div class="list-group">
             <a href="#" class="list-group-item">Beauty</a>
             <a href="#" class="list-group-item">Restaurant</a>
             <a href="#" class="list-group-item">Cinema</a>
           </div>
+        </div> -->
 
+        <div class="col-lg-3">
+          <h1 class="my-4">Search</h1>
+          <div class="list-group">
+            <form action="/services" method="GET" class="form-inline">
+              <div>
+                <input type="text" name="search" placeholder="Search service" class="form-control">
+                <p></p>
+                <input type="submit" value="Search" class="btn btn-secondary">
+              </div>
+            </form>
+          </div>
         </div>
         <!-- /.col-lg-3 -->
 
