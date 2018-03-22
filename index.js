@@ -4,6 +4,7 @@ var express        = require("express"),
     flash          = require("connect-flash"),
     mongoose       = require("mongoose"),
     passport       = require("passport"),
+    paypal         = require("paypal-rest-sdk"),
     LocalStrategy  = require("passport-local"),
     methodOverride = require("method-override"),
     Service        = require("./models/service"),
@@ -29,6 +30,12 @@ app.use(require("express-session")({
   resave: false,
   saveUninitialized: false
 }));
+
+paypal.configure({
+  'mode': 'sandbox', //sandbox or live
+  'client_id': 'AbDmll1Dso9HWV62exqxJtV6fHYRxs8EMTkbR323GXUGfId7sBsrLSI4PEkfCIBqfJb4W4BhtfeKfduV',
+  'client_secret': 'ELTkU_SB5592CBLQh4meKOgx60PO80-wrLwAqig8j3CzsW5T9ynijQE6w1d1HPmMFyoCeJ7Pd83myeMN'
+});
 
 app.use(passport.initialize());
 app.use(passport.session());

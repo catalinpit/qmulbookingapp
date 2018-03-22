@@ -1,7 +1,14 @@
 var express     = require("express"),
     router      = express.Router(),
     Service     = require("../models/service"),
+    paypal      = require("paypal-rest-sdk"),
     middleware  = require("../middleware");
+
+paypal.configure({
+  'mode': 'sandbox', //sandbox or live
+  'client_id': 'AbDmll1Dso9HWV62exqxJtV6fHYRxs8EMTkbR323GXUGfId7sBsrLSI4PEkfCIBqfJb4W4BhtfeKfduV',
+  'client_secret': 'ELTkU_SB5592CBLQh4meKOgx60PO80-wrLwAqig8j3CzsW5T9ynijQE6w1d1HPmMFyoCeJ7Pd83myeMN'
+});
 
 // display all services available
 router.get("/services", function(req, res) {
@@ -95,6 +102,106 @@ router.delete("/services/:id", middleware.checkServiceOwnership, function(req, r
       res.redirect("/services");
     }
   });
+});
+
+// Paypal payment route
+router.post("/services/:id/pay", function(req, res) {
+  Service.findById(req.params.id, function(err, foundService) {
+    if(err) {
+      console.log(err);
+    } else {
+      var create_payment_json = {
+          "intent": "sale",
+          "payer": {
+              "payment_method": "paypal"
+          },
+          "redirect_urls": {
+              "return_url": "http://localhost:3000/services/" + foundService.id + "/success",
+              "cancel_url": "http://localhost:3000/services/" + foundService.id + "/cancel"
+          },
+          "transactions": [{
+              "item_list": {
+                  "items": [{
+                      "name": foundService.name,
+                      "sku": foundService.id,
+                      "price": foundService.price,
+                      "currency": "GBP",
+                      "quantity": 1
+                  }]
+              },
+              "amount": {
+                  "currency": "GBP",
+                  "total": foundService.price
+              },
+              "description": foundService.description
+          }]
+    };
+
+    // create Paypal payment
+    paypal.payment.create(create_payment_json, function (error, payment) {
+        if (error) {
+            throw error;
+            console.log(error);
+        } else {
+          for(var i = 0; i < payment.links.length; i++)
+          {
+            if(payment.links[i].rel === 'approval_url'){
+              res.redirect(payment.links[i].href);
+            }
+          }
+          console.log(payment);
+        }
+    });
+    }
+  })
+});
+
+router.get("/services/:id/success", function(req, res) {
+  Service.findById(req.params.id, function(err, foundService) {
+    if(err) {
+      console.log(err);
+    } else {
+      var payerId = req.query.PayerID;
+      var paymentId = req.query.paymentId;
+
+      console.log(payerId);
+      console.log(paymentId);
+
+      var execute_payment_json = {
+        "payer_id": payerId,
+        "transactions": [{
+            "amount": {
+                "currency": "GBP",
+                "total": foundService.price
+            }
+        }]
+      }
+
+      paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+        if (error) {
+          console.log(error.response);
+          throw error;
+        } else {
+          console.log("Get Payment Response");
+          console.log(JSON.stringify(payment));
+          req.flash("success", "We received your payment, thank you!");
+          res.redirect("/services/" + foundService.id);
+        }
+      });
+    }
+  });
+});
+
+router.get("/services/:id/cancel", function(req, res) {
+  Service.findById(req.params.id, function(err, foundService) {
+    if(err) {
+      req.flash("error", err);
+      console.log(err);
+    } else {
+    req.flash("error", "The payment did not go through. Please retry.");
+    res.redirect("/services/" + foundService.id)
+    }
+  })
 });
 
 module.exports = router;
