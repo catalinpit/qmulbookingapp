@@ -1,0 +1,38 @@
+<% include ../partials/header %>
+
+<div class="container">
+  <div class="jumbotron">
+    <h1> Edit <%= user.firstName %> <%= user.lastName %> account</h1>
+    <i> Do not leave any fields blank </i>
+  </div>
+</div>
+
+<div class="container" style="margin:auto;">
+      <form  action="/users/<%= user._id %>?_method=PUT" method="POST">
+        <div class="form-group">
+          <label for="userfirstname">First name</label>
+          <input type="text" class="form-control" name="user[firstName]" id="userfirstname" value="<%= user.firstName %>">
+          <p></p>
+          <label for="userlastname">Last name</label>
+          <input type="text" class="form-control" name="user[lastName]" id="userlastname" value="<%= user.lastName %>">
+          <p></p>
+          <label for="userusername">Username</label>
+          <input type="text" class="form-control" name="user[username]" id="username" value="<%= user.username %>">
+          <p></p>
+          <label for="userpassword">Password</label>
+          <input type="password" class="form-control" name="user[password]" id="userpassword">
+          <p></p>
+          <label for="useremail">Email</label>
+          <input type="text" class="form-control" name="user[email]" id="useremail" value="<%= user.email %>">
+          <p></p>
+          <label for="userphone">Telephone</label>
+          <input type="text" class="form-control" name="user[telephone]" id="userphone" value="<%= user.telephone %>">
+          <p></p>
+        <button type="submit">Submit</button>
+      </form>
+</div>
+
+  </div>
+</div>
+
+<% include ../partials/footer %>

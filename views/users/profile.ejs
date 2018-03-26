@@ -41,6 +41,18 @@
       </div>
       <!-- /.card -->
 
+      <% if(currentUser && currentUser.isAdmin) { %>
+        <div class="card card-outline-secondary my-4">
+          <div class="card-body">
+            <a href="/users/<%= user._id %>/edit" class="btn btn-success" >Edit User</a>
+            <form action="/users/<%= user._id %>?_method=DELETE" method="POST" style="float:right;">
+              <button class="btn btn-danger" style="float:right;">Delete User</button>
+            </form>
+          </div>
+        </div>
+      <% } %>
+      <!-- /.card -->
+
       <div class="card card-outline-secondary my-4">
         <div class="card-header">
           Service Rating
@@ -51,7 +63,6 @@
         </div>
       </div>
       <!-- /.card -->
-
   </div>
 
 </div>

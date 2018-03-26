@@ -83,9 +83,40 @@ router.get("/users/:id", function(req, res) {
       console.log(err);
       res.redirect("/");
     }
-
     res.render("users/profile", {user: foundUser});
   })
+});
+
+// edit a specific a user
+router.get("/users/:id/edit", function(req, res) {
+  User.findById(req.params.id, function(err, foundUser) {
+    res.render("users/edit", {user: foundUser});
+  });
+});
+
+// update a user
+router.put("/users/:id", function(req, res) {
+  User.findByIdAndUpdate(req.params.id, req.body.user, function(err, updatedUser) {
+    if(err) {
+      res.redirect("back");
+    } else {
+      req.flash("success", "User updated.");
+      res.redirect("/users/" + req.params.id);
+    }
+  });
+});
+
+// delete a specific user
+router.delete("/users/:id/", function(req, res) {
+  User.findByIdAndRemove(req.params.id, function(err) {
+    if(err) {
+      req.flash("error", "Something went wrong.");
+      res.redirect("back");
+    } else {
+      req.flash("success", "User deleted.");
+      res.redirect("/services");
+    }
+  });
 });
 
 module.exports = router;

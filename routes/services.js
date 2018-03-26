@@ -103,6 +103,7 @@ router.put("/services/:id", middleware.checkServiceOwnership, function(req, res)
       console.log(err);
       res.redirect("/services");
     } else {
+      req.flash("success", "Service updated.");
       res.redirect("/services/" + req.params.id);
     }
   })
@@ -113,8 +114,10 @@ router.put("/services/:id", middleware.checkServiceOwnership, function(req, res)
 router.delete("/services/:id", middleware.checkServiceOwnership, function(req, res) {
   Service.findByIdAndRemove(req.params.id, function(err) {
     if(err) {
+      req.flash("error", "Something went wrong!");
       res.redirect("/services");
     } else {
+      req.flash("success", "Service deleted.");
       res.redirect("/services");
     }
   });

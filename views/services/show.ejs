@@ -136,7 +136,7 @@
         <div class="card-body">
           <% service.reviews.forEach(function(review){ %>
             <p><%= review.text %></p>
-            <small class="text-muted">Posted by <strong><%= review.author.username %></strong> <%= moment(review.createdAt).fromNow(); %></small>
+            <small class="text-muted">Posted by <strong><a href="/users/<%= review.author.id %>"><%= review.author.username %></a></strong> <%= moment(review.createdAt).fromNow(); %></small>
             <p><div class="btn-group">
             <% if(currentUser && review.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin) { %>
               <a href="/services/<%= service._id %>/reviews/<%= review._id %>/edit" class="btn btn-primary btn-sm btn-warning">Edit</a>
